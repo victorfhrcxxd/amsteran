@@ -1,0 +1,46 @@
+# Amsteran - aCis L2J Gameserver Rules
+
+## Project Overview
+This is a custom Lineage 2 Java gameserver based on the aCis (Java 8) framework.
+The project is structured as an Eclipse Java project under `net.sf.l2j`.
+
+## Package Structure
+- `net.sf.l2j.gameserver.instancemanager` - Singleton managers (use getInstance() pattern)
+- `net.sf.l2j.gameserver.instancemanager.custom` - Custom feature managers (e.g. DailyReward, Vip, Zerg)
+- `net.sf.l2j.gameserver.instancemanager.autofarm` - Autofarm subsystem
+- `net.sf.l2j.gameserver.handler.voicedcommandhandlers` - Voiced (.command) handlers
+- `net.sf.l2j.gameserver.handler.admincommandhandlers` - Admin command handlers
+- `net.sf.l2j.gameserver.handler.itemhandlers` - Item use handlers
+- `net.sf.l2j.gameserver.handler.skillhandlers` - Skill effect handlers
+- `net.sf.l2j.gameserver.model.actor.instance` - L2PcInstance, L2NpcInstance, etc.
+- `net.sf.l2j.gameserver.model.entity.events` - Custom events (TvT, CTF, DM, LM, KTB)
+- `net.sf.l2j.gameserver.network.serverpackets` - Packets sent to client
+- `net.sf.l2j.gameserver.network.clientpackets` - Packets received from client
+- `config/custom/` - Custom feature .properties config files
+- `data/html/` - NPC HTML dialog files
+- `sql/` - SQL scripts for database setup
+
+## Coding Conventions
+- All managers must follow the singleton pattern using a static `getInstance()` via a static inner `SingletonHolder` class
+- Use `java.util.logging.Logger` for logging, never `System.out.println`
+- Logger field name must be `_log`, instance fields must be prefixed with `_`
+- Use `L2PcInstance` for player references, never generic types
+- Null-check `activeChar` at the start of every voiced/admin command handler
+- Use `ThreadPoolManager.getInstance().scheduleGeneral(...)` for delayed tasks
+- Config values must be loaded in `net.sf.l2j.Config` class, grouped by feature section
+- HTML dialogs go in `data/html/<feature>/` and are sent via `NpcHtmlMessage`
+- SQL scripts use lowercase table names and underscore_case columns
+
+## Feature Conventions
+- New voiced commands: implement `IVoicedCommandHandler`, register in `VoicedCommandHandler`
+- New admin commands: implement `IAdminCommandHandler`, register in `AdminCommandHandler`
+- New item handlers: implement `IItemHandler`, register in `ItemHandler`
+- New managers must be instantiated in `GameServer.java` during startup
+- Config properties files go in `config/custom/` and must be loaded in `Config.java`
+
+## Do Not
+- Do not modify base aCis files without a clear reason; prefer extending or wrapping
+- Do not hardcode item IDs, NPC IDs, or skill IDs — use named constants or config values
+- Do not use raw SQL strings inline; prefer a dedicated DAO/manager method
+- Do not add commented-out dead code blocks
+- Do not use `System.exit()` outside of `Shutdown.java`

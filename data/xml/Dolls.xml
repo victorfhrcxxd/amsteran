@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+	<!-- 
+		Doll Configuration:
+		Id = Item ID of the doll
+		SkillId = Passive skill granted by this doll
+		SkillLvl = Level of the skill
+		Name = Display name for the doll group
+		Level = Doll level (for display)
+		UpgradeId = Item ID of the next level doll (0 = max level)
+		UpgradePriceId = Item ID used as upgrade cost
+		UpgradePriceCount = Amount of price items required
+		UpgradeChance = Custom success chance for this specific doll (0 = use global config DollUpgradeChance)
+		
+		Example: Doll of Power (3 levels)
+		<Dolls Id="9500" SkillId="1000" SkillLvl="1" Name="Doll of Power" Level="1" UpgradeId="9501" UpgradePriceId="57" UpgradePriceCount="1000000" UpgradeChance="80" />
+		<Dolls Id="9501" SkillId="1000" SkillLvl="2" Name="Doll of Power" Level="2" UpgradeId="9502" UpgradePriceId="57" UpgradePriceCount="5000000" UpgradeChance="50" />
+		<Dolls Id="9502" SkillId="1000" SkillLvl="3" Name="Doll of Power" Level="3" />
+	-->
+</list>

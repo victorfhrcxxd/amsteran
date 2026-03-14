@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+	<!-- Armor Skins -->
+	<skin type="armor">
+		<type id="1" name="Dark Crystal" chestId="2382" legsId="2388" glovesId="2394" feetId="2436" hairId="0" priceId="57" priceCount="5000000" />
+		<type id="2" name="Tallum" chestId="2384" legsId="2390" glovesId="2396" feetId="2446" hairId="0" priceId="57" priceCount="5000000" />
+		<type id="3" name="Nightmare" chestId="2385" legsId="2391" glovesId="2397" feetId="2438" hairId="0" priceId="57" priceCount="7000000" />
+		<type id="4" name="Majestic" chestId="2383" legsId="2389" glovesId="2395" feetId="2437" hairId="0" priceId="57" priceCount="7000000" />
+		<type id="5" name="Imperial" chestId="6373" legsId="6374" glovesId="6375" feetId="6376" hairId="0" priceId="57" priceCount="10000000" />
+		<type id="6" name="Draconic" chestId="6379" legsId="6380" glovesId="6381" feetId="6382" hairId="0" priceId="57" priceCount="10000000" />
+	</skin>
+
+	<!-- Weapon Skins -->
+	<skin type="weapon">
+		<type id="1" name="Arcana Mace" weaponId="7902" priceId="57" priceCount="5000000" />
+		<type id="2" name="Draconic Bow" weaponId="7903" priceId="57" priceCount="5000000" />
+		<type id="3" name="Soul Bow" weaponId="6594" priceId="57" priceCount="7000000" />
+		<type id="4" name="Shining Bow" weaponId="6590" priceId="57" priceCount="7000000" />
+	</skin>
+
+	<!-- Shield Skins -->
+	<skin type="shield">
+		<type id="1" name="Imperial Shield" shieldId="6377" priceId="57" priceCount="3000000" />
+		<type id="2" name="Arcana Shield" shieldId="7905" priceId="57" priceCount="5000000" />
+	</skin>
+</list>

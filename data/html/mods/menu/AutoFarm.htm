@@ -1,0 +1,119 @@
+<html>
+<body>
+<title>Auto Hunting</title>
+<center>
+
+<table width=290 bgcolor=111111>
+<tr>
+<td align=center>
+<font color=999999>Auto Farm State: </font>%autofarm%&nbsp;&nbsp;
+<button value="%button%" action="bypass -h voiced_farm_on" width=50 height=21 back=L2UI_ch3.Btn1_normalOn fore=L2UI_ch3.Btn1_normal>
+</td>
+</tr>
+</table>
+<br1>
+<img src="L2UI.Squaregray" width="290" height="1">
+<br1>
+
+<table width=290>
+<tr>
+<td width=140 align=right><font color=B09060>Target Range:</font></td>
+<td width=21 align=center><button value=" " action="bypass -h voiced_radiusAutoFarm dec_radius" width=16 height=16 back=L2UI_CH3.btn_down_back fore=L2UI_CH3.btn_down_back></td>
+<td width=68 align=center>%radius%</td>
+<td width=21 align=center><button value=" " action="bypass -h voiced_radiusAutoFarm inc_radius" width=16 height=16 back=L2UI_CH3.btn_up_back fore=L2UI_CH3.btn_up_back></td>
+</tr>
+<tr>
+<td width=140 align=right><font color=B09060>Heal Percent:</font></td>
+<td width=21 align=center><button value=" " action="bypass -h voiced_healAutoFarm dec_heal" width=16 height=16 back=L2UI_CH3.btn_down_back fore=L2UI_CH3.btn_down_back></td>
+<td width=68 align=center>%heal%</td>
+<td width=21 align=center><button value=" " action="bypass -h voiced_healAutoFarm inc_heal" width=16 height=16 back=L2UI_CH3.btn_up_back fore=L2UI_CH3.btn_up_back></td>
+</tr>
+<tr>
+<td width=140 align=right><font color=B09060>Shortcut Page:</font></td>
+<td width=21 align=center><button value=" " action="bypass -h voiced_pageAutoFarm dec_page" width=16 height=16 back=L2UI_CH3.btn_down_back fore=L2UI_CH3.btn_down_back></td>
+<td width=68 align=center>%page%</td>
+<td width=21 align=center><button value=" " action="bypass -h voiced_pageAutoFarm inc_page" width=16 height=16 back=L2UI_CH3.btn_up_back fore=L2UI_CH3.btn_up_back></td>
+</tr>
+<tr>
+<td width=140 align=right><font color=B09060>Mana Potion %:</font></td>
+<td width=21 align=center><button value=" " action="bypass -h voiced_mpAutoFarm dec_mp_pot" width=16 height=16 back=L2UI_CH3.btn_down_back fore=L2UI_CH3.btn_down_back></td>
+<td width=68 align=center>%mpPotion%</td>
+<td width=21 align=center><button value=" " action="bypass -h voiced_mpAutoFarm inc_mp_pot" width=16 height=16 back=L2UI_CH3.btn_up_back fore=L2UI_CH3.btn_up_back></td>
+</tr>
+<tr>
+<td width=140 align=right><font color=B09060>Healing Potion %:</font></td>
+<td width=21 align=center><button value=" " action="bypass -h voiced_hpAutoFarm dec_hp_pot" width=16 height=16 back=L2UI_CH3.btn_down_back fore=L2UI_CH3.btn_down_back></td>
+<td width=68 align=center>%hpPotion%</td>
+<td width=21 align=center><button value=" " action="bypass -h voiced_hpAutoFarm inc_hp_pot" width=16 height=16 back=L2UI_CH3.btn_up_back fore=L2UI_CH3.btn_up_back></td>
+</tr>
+<tr>
+<td width=140 align=right><font color=B09060>Summon Skill %:</font></td>
+<td width=21 align=center><button value=" " action="bypass -h voiced_summonSkillAutoFarm dec_summonSkill" width=16 height=16 back=L2UI_CH3.btn_down_back fore=L2UI_CH3.btn_down_back></td>
+<td width=68 align=center>%summonSkill%</td>
+<td width=21 align=center><button value=" " action="bypass -h voiced_summonSkillAutoFarm inc_summonSkill" width=16 height=16 back=L2UI_CH3.btn_up_back fore=L2UI_CH3.btn_up_back></td>
+</tr>
+</table>
+<br1>
+<img src="L2UI.Squaregray" width="290" height="1">
+<br1>
+
+<table width=290>
+<tr>
+<td width=255 align=left><font color=999999>Enable Summon attack support</font></td>
+<td width=25 align=right><button value=" " action="bypass -h voiced_enableSummonAttack" width=16 height=16 %summonAtk%></td>
+</tr>
+<tr>
+<td width=255 align=left><font color=999999>Manner Mode, Anti-KS protection</font></td>
+<td width=25 align=right><button value=" " action="bypass -h voiced_enableAntiKs" width=16 height=16 %antiKs%></td>
+</tr>
+<tr>
+<td width=255 align=left><font color=999999>Disable Auto Farm after losing all buffs</font></td>
+<td width=25 align=right><button value=" " action="bypass -h voiced_enableBuffProtect" width=16 height=16 %noBuff%></td>
+</tr>
+</table>
+<br1>
+<img src="L2UI.Squaregray" width="290" height="1">
+<br1>
+
+<table width=290>
+<tr>
+<td align=center><font color=FFCC44>Avoid specific monsters adding them to the blacklist</font></td>
+</tr>
+</table>
+<br1>
+<table width=290>
+<tr>
+<td width=145 align=center>
+<button value="Blacklist Target" action="bypass -h voiced_ignoreMonster" width=134 height=21 back=L2UI_ch3.Btn1_normalOn fore=L2UI_ch3.Btn1_normal>
+</td>
+<td width=145 align=center>
+<button value="Unblacklist Target" action="bypass -h voiced_activeMonster" width=134 height=21 back=L2UI_ch3.Btn1_normalOn fore=L2UI_ch3.Btn1_normal>
+</td>
+</tr>
+</table>
+<br1>
+<img src="L2UI.Squaregray" width="290" height="1">
+<br1>
+
+<table width=290 bgcolor=111111>
+<tr>
+<td align=left>
+<font color=999999>Rules: &nbsp; - <font color=FFFFFF>'Attack'</font> Shortcuts: F1, F2, F3 &amp; F4</font><br1>
+<font color=999999>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - <font color=FFFFFF>'Chance'</font> Shortcuts: F5, F6, F7 &amp; F8</font><br1>
+<font color=999999>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - <font color=FFFFFF>'Low Life'</font> Shortcuts: F9, F10, F11 &amp; F12</font>
+</td>
+</tr>
+</table>
+<br1>
+
+<table width=290>
+<tr>
+<td align=center>
+<button value="Back" action="bypass -h voiced_menu" width=100 height=21 back=L2UI_ch3.Btn1_normalOn fore=L2UI_ch3.Btn1_normal>
+</td>
+</tr>
+</table>
+
+</center>
+</body>
+</html>

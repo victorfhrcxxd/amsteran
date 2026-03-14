@@ -1,0 +1,38 @@
+# Eclipse project files
+.classpath
+.project
+.settings/
+.metadata/
+
+# Build output
+bin/
+build/
+dist/
+*.class
+*.jar
+*.war
+*.ear
+
+# Ant build artifacts
+build.xml.bak
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE - IntelliJ
+.idea/
+*.iml
+*.iws
+
+# Sensitive configs
+config/hexid.txt
+config/server.properties
+
+# Lib folder (binaries)
+lib/
