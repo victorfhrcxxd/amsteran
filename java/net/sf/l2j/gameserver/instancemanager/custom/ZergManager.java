@@ -66,11 +66,14 @@ public class ZergManager
 
 	private boolean checkAllyAreaKickTask(L2PcInstance activeChar, Integer numberBox, Collection<L2PcInstance> world)
 	{
+		if (activeChar.getClan() == null || activeChar.getAllyId() == 0)
+			return false;
+
 		Map<String, List<L2PcInstance>> zergMap = new HashMap<String, List<L2PcInstance>>();
 
 		for (L2PcInstance player : world)
 		{
-			if (!player.isInsideZone(ZoneId.NO_ZERG) || player.getAllyId() == 0)
+			if (!player.isInsideZone(ZoneId.NO_ZERG) || player.getAllyId() == 0 || player.getClan() == null)
 				continue;
 
 			String zerg1 = activeChar.getClan().getAllyName();

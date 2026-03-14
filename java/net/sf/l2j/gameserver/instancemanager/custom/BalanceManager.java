@@ -45,11 +45,10 @@ public class BalanceManager
 	
 	private void load()
 	{
-		try (Connection con = L2DatabaseFactory.getInstance().getConnection())
-		{
+		try (Connection con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement stm = con.prepareStatement("SELECT * FROM balance");
-			ResultSet rset = stm.executeQuery();
-			
+			ResultSet rset = stm.executeQuery())
+		{
 			while (rset.next())
 			{
 				int from = rset.getInt("from_class");
@@ -65,10 +64,6 @@ public class BalanceManager
 					values.put(from, temp);
 				}
 			}
-			
-			rset.close();
-			stm.close();
-			con.close();
 		}
 		catch (Exception e)
 		{
@@ -82,24 +77,24 @@ public class BalanceManager
 		{
 			if (values.containsKey(from) && values.get(from).containsKey(to))
 			{
-				PreparedStatement stm = con.prepareStatement("UPDATE balance SET mod_val=? WHERE from_class=? AND to_class=?");
-				stm.setInt(1, mod);
-				stm.setInt(2, from);
-				stm.setInt(3, to);
-				stm.execute();
-				stm.close();
+				try (PreparedStatement stm = con.prepareStatement("UPDATE balance SET mod_val=? WHERE from_class=? AND to_class=?"))
+				{
+					stm.setInt(1, mod);
+					stm.setInt(2, from);
+					stm.setInt(3, to);
+					stm.execute();
+				}
 			}
 			else
 			{
-				PreparedStatement stm = con.prepareStatement("INSERT INTO balance VALUES (?,?,?)");
-				stm.setInt(1, from);
-				stm.setInt(2, to);
-				stm.setInt(3, mod);
-				stm.execute();
-				stm.close();
+				try (PreparedStatement stm = con.prepareStatement("INSERT INTO balance VALUES (?,?,?)"))
+				{
+					stm.setInt(1, from);
+					stm.setInt(2, to);
+					stm.setInt(3, mod);
+					stm.execute();
+				}
 			}
-			
-			con.close();
 		}
 		catch (Exception e)
 		{

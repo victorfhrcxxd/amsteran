@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS `reward_manager` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `hwid` VARCHAR(50) NOT NULL,
+  `expire_time` BIGINT NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `hwid` (`hwid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

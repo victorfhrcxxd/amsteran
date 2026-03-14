@@ -22,7 +22,7 @@ import net.sf.l2j.util.Rnd;
 
 public class TimeInstanceManager
 {
-	protected static final Logger LOGGER = Logger.getLogger(TimeInstanceManager.class.getName());
+	private static final Logger _log = Logger.getLogger(TimeInstanceManager.class.getName());
 	
 	private TimeInstanceTask _task;
 	
@@ -32,10 +32,10 @@ public class TimeInstanceManager
 		{
 			SheduleTimeInstanceTask(true);
 			
-			LOGGER.info("Time Instance Manager: Loaded");
+			_log.info("TimeInstanceManager: Loaded.");
 		}
 		else
-			LOGGER.info("Time Instance Manager: Disabled");
+			_log.info("TimeInstanceManager: Disabled.");
 	}
 	
 	public static TimeInstanceManager getInstance()

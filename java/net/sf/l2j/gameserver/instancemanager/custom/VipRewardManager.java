@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.logging.Logger;
 
 import net.sf.l2j.L2DatabaseFactory;
 import net.sf.l2j.gameserver.ThreadPoolManager;
@@ -15,47 +16,35 @@ import net.sf.l2j.gameserver.network.serverpackets.MagicSkillUse;
 
 public class VipRewardManager
 {
+	private static final Logger _log = Logger.getLogger(VipRewardManager.class.getName());
+
 	protected VipRewardManager()
 	{
-		/*
-		if (Config.ALLOW_VIP_REWARD)
-		{
-			loadSystemThread();
-			System.out.println("Vip Reward Manager: Loaded");
-		}
-		else
-			System.out.println("Vip Reward Manager: Disabled");
-		*/
+		_log.info("VipRewardManager: Loaded.");
 	}
-	
+
 	protected static void loadSystemThread()
 	{
-		long spawnMillis = 0;
-    	
-    	Calendar c = Calendar.getInstance();
-    	
-    	String[] time =  "24:00".split(":");
-		c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH)+1);
-		c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
-		c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.DAY_OF_MONTH, 1);
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
 		c.set(Calendar.SECOND, 0);
-		spawnMillis = c.getTimeInMillis() - System.currentTimeMillis();
-		
+		c.set(Calendar.MILLISECOND, 0);
+		long spawnMillis = c.getTimeInMillis() - System.currentTimeMillis();
+
 		ThreadPoolManager.getInstance().scheduleGeneral(new Runnable()
-        {
+		{
 			@Override
 			public void run()
 			{
 				clearDBTable();
-				
-				// Reload the system
 				loadSystemThread();
-				
-				System.out.println("[Vip Reward] Table cleaned and restart the thread.");
+				_log.info("[VipRewardManager] Table cleaned, thread restarted.");
 			}
-        }, spawnMillis);
+		}, spawnMillis);
 	}
-	
+
 	public static void clearDBTable()
 	{
 		try (Connection con = L2DatabaseFactory.getInstance().getConnection())
@@ -69,7 +58,7 @@ public class VipRewardManager
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void claimVipReward(L2PcInstance player)
 	{
 		/*

@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.logging.Logger;
 
 import net.sf.l2j.Config;
 import net.sf.l2j.L2DatabaseFactory;
@@ -18,15 +19,17 @@ import net.sf.l2j.util.Rnd;
 
 public class DailyRewardManager
 {
+	private static final Logger _log = Logger.getLogger(DailyRewardManager.class.getName());
+
 	protected DailyRewardManager()
 	{
 		if (Config.ALLOW_DAILY_REWARD)
 		{
 			loadSystemThread();
-			System.out.println("Daily Reward Manager: Loaded");
+			_log.info("DailyRewardManager: Loaded.");
 		}
 		else
-			System.out.println("Daily Reward Manager: Disabled");
+			_log.info("DailyRewardManager: Disabled.");
 	}
 	
 	protected static void loadSystemThread()
@@ -34,13 +37,12 @@ public class DailyRewardManager
 		long spawnMillis = 0;
     	
     	Calendar c = Calendar.getInstance();
-    	
-    	String[] time =  "24:00".split(":");
-		c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH)+1);
-		c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
-		c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
-		c.set(Calendar.SECOND, 0);
-		spawnMillis = c.getTimeInMillis() - System.currentTimeMillis();
+    	c.add(Calendar.DAY_OF_MONTH, 1);
+    	c.set(Calendar.HOUR_OF_DAY, 0);
+    	c.set(Calendar.MINUTE, 0);
+    	c.set(Calendar.SECOND, 0);
+    	c.set(Calendar.MILLISECOND, 0);
+    	spawnMillis = c.getTimeInMillis() - System.currentTimeMillis();
 		
 		ThreadPoolManager.getInstance().scheduleGeneral(new Runnable()
         {
@@ -52,7 +54,7 @@ public class DailyRewardManager
 				// Reload the system
 				loadSystemThread();
 				
-				System.out.println("[Daily Reward] Table cleaned and restart the thread.");
+				_log.info("[DailyRewardManager] Table cleaned, thread restarted.");
 			}
         }, spawnMillis);
 	}
@@ -75,23 +77,22 @@ public class DailyRewardManager
 	{
 		if (Config.ALLOW_DAILY_REWARD)
 		{
+			if (player.getHWid() == null || player.getHWid().isEmpty())
+				return;
+
 			if (checkIfIPorHWIDExistInDB(player, "hwid"))
 			{
-				if (checkForLatestHWIDReward(player, "hwid")) // Rewarded
+				if (checkForLatestHWIDReward(player, "hwid")) // Already rewarded today
 				{
-					if (checkForLatestHWIDReward(player, "hwid"))
-						player.sendMessage("You cannot receive any more rewards at this time.");
-						//player.sendMessage("Join again in " + Cd(player, "hwid", false) + " to get your daily reward.");
+					player.sendMessage("You cannot receive any more rewards at this time.");
 				}
-				else // Not rewarded
-				{ 
-					if (checkIfIPorHWIDExistInDB(player, "hwid"))
-						updateLastReward(player, "hwid");
-
+				else // Not yet rewarded
+				{
+					updateLastReward(player, "hwid");
 					giveReward(player);
 				}
 			}
-			else // Insert new Parent and reward
+			else // First time — insert and reward
 			{
 				insertNewParentOfPlayerIPHWID(player);
 				giveReward(player);
@@ -125,7 +126,7 @@ public class DailyRewardManager
 
 	private static boolean checkForLatestHWIDReward(L2PcInstance activeChar, String mode)
 	{
-		return Long.parseLong(Cd(activeChar, mode, true)) > System.currentTimeMillis();
+		return Long.parseLong(getCooldownTime(activeChar, mode, true)) > System.currentTimeMillis();
 	}
 
 	private static void updateLastReward(L2PcInstance player, String mode)
@@ -134,7 +135,7 @@ public class DailyRewardManager
 		{
 			PreparedStatement statement = con.prepareStatement("UPDATE reward_manager SET expire_time=? WHERE "+mode+"=?");
 			statement.setLong(1, System.currentTimeMillis());
-			statement.setString(2,  player.getHWid()/*(mode.equals("ip") ? player.getClient().getConnection().getInetAddress().getHostAddress() : player.getHWid())*/);
+			statement.setString(2,  player.getHWid());
 			statement.execute();
 			statement.close();
 		}
@@ -144,7 +145,7 @@ public class DailyRewardManager
 		}
 	}
 	
-	private static String Cd(L2PcInstance player, String mode, boolean returnInTimestamp)
+	private static String getCooldownTime(L2PcInstance player, String mode, boolean returnInTimestamp)
 	{
 		long CdMs = 0;
 		long voteDelay = 1440 * 60000L;

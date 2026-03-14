@@ -34,10 +34,13 @@ public class IPManager
 
     private boolean multiboxKickTask(L2PcInstance activeChar, Integer numberBox, Collection<L2PcInstance> world)
     {
+        if (activeChar.getClient() == null || activeChar.getClient().isDetached() || activeChar.getClient().getConnection() == null)
+            return false;
+
         Map<String, List<L2PcInstance>> ipMap = new HashMap<String, List<L2PcInstance>>();
         for (L2PcInstance player : world)
         {
-            if (player.getClient() == null || player.getClient().isDetached())
+            if (player.getClient() == null || player.getClient().isDetached() || player.getClient().getConnection() == null)
                 continue;
             else
             {
