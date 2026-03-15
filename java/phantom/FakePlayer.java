@@ -46,6 +46,7 @@ public class FakePlayer extends L2PcInstance
 	private boolean _isFakeEvent;
 	private boolean _isFakeTeleport;
 	private boolean _isTour;
+	private boolean _isFakeChaoticFarm;
 	protected String _mood = "";
 	
 	public boolean isUnderControl() 
@@ -612,6 +613,16 @@ public class FakePlayer extends L2PcInstance
 	public void setTour(boolean isTour)
 	{
 		_isTour = isTour;
+	}
+	
+	public boolean isFakeChaoticFarm()
+	{
+		return _isFakeChaoticFarm;
+	}
+
+	public void setFakeChaoticFarm(boolean isFakeChaoticFarm)
+	{
+		_isFakeChaoticFarm = isFakeChaoticFarm;
 	}
 	
 	public void setMood(String mood)

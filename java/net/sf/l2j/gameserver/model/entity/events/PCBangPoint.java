@@ -76,7 +76,6 @@ public class PCBangPoint implements Runnable
 					}
 				}
 			}
-			activeChar = null;
 		}
 	}
 }

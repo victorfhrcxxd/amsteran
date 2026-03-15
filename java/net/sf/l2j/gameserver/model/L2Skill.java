@@ -1437,6 +1437,9 @@ public abstract class L2Skill implements IChanceSkillTrigger
 					{
 						if (obj instanceof L2Attackable || obj instanceof L2Playable)
 						{
+							if (obj.getInstanceId() != activeChar.getInstanceId())
+								continue;
+							
 							switch (_targetType)
 							{
 								case TARGET_FRONT_AURA:
@@ -1491,6 +1494,9 @@ public abstract class L2Skill implements IChanceSkillTrigger
 						continue;
 					
 					if (!Util.checkIfInRange(_skillRadius, target, obj, true))
+						continue;
+					
+					if (obj.getInstanceId() != activeChar.getInstanceId())
 						continue;
 					
 					if ((activeChar instanceof L2PcInstance) && !activeChar.isArenaAttack() && obj.isArenaAttack())
@@ -1550,6 +1556,9 @@ public abstract class L2Skill implements IChanceSkillTrigger
 						continue;
 					
 					if (obj == origin)
+						continue;
+					
+					if (obj.getInstanceId() != activeChar.getInstanceId())
 						continue;
 					
 					if ((activeChar instanceof L2PcInstance) && !activeChar.isArenaAttack() && obj.isArenaAttack())

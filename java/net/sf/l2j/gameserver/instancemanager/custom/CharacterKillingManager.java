@@ -156,12 +156,9 @@ public final class CharacterKillingManager
 					_winnerPvPKills = rs.getInt(1);
 					_winnerPvPKillsCount = kills;
 				}
-				
-				if (_winnerPvPKills == 0)
-					addReward(_winnerPvPKills, true);
-				else
-					addReward(_winnerPvPKills, false);
 			}
+			if (_winnerPvPKills != 0)
+				addReward(_winnerPvPKills, false);
 		}
 		catch (Exception e)
 		{
@@ -187,12 +184,9 @@ public final class CharacterKillingManager
 					_winnerPKKills = rs.getInt(1);
 					_winnerPKKillsCount = kills;
 				}
-				
-				if (_winnerPKKills == 0)
-					addReward(_winnerPKKills, true);
-				else
-					addReward(_winnerPKKills, false);
 			}
+			if (_winnerPKKills != 0)
+				addReward(_winnerPKKills, false);
 		}
 		catch (Exception e)
 		{
@@ -341,14 +335,20 @@ public final class CharacterKillingManager
 	private static void addOfflineItem(int ownerId, int itemId, int count)
 	{
 		Item item = ItemTable.getInstance().getTemplate(itemId);
+		if (item == null)
+		{
+			_log.warning("addOfflineItem: invalid itemId " + itemId + " for owner " + ownerId);
+			return;
+		}
+		
+		if (count > 1 && !item.isStackable())
+			return;
+		
 		int objectId = IdFactory.getInstance().getNextId();
 		
-		try (Connection con = L2DatabaseFactory.getInstance().getConnection())
+		try (Connection con = L2DatabaseFactory.getInstance().getConnection();
+				PreparedStatement statement = con.prepareStatement("INSERT INTO items (owner_id,item_id,count,loc,loc_data,enchant_level,object_id,custom_type1,custom_type2,mana_left,time) VALUES (?,?,?,?,?,?,?,?,?,?,?)"))
 		{
-			if (count > 1 && !item.isStackable())
-				return;
-			
-			PreparedStatement statement = con.prepareStatement("INSERT INTO items (owner_id,item_id,count,loc,loc_data,enchant_level,object_id,custom_type1,custom_type2,mana_left,time) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
 			statement.setInt(1, ownerId);
 			statement.setInt(2, item.getItemId());
 			statement.setInt(3, count);
@@ -361,12 +361,10 @@ public final class CharacterKillingManager
 			statement.setInt(10, -1);
 			statement.setLong(11, 0);
 			statement.executeUpdate();
-			statement.close();
 		}
 		catch (SQLException e)
 		{
-			_log.severe("Could not update item char: " + e);
-			e.printStackTrace();
+			_log.severe("Could not insert offline item for owner " + ownerId + ": " + e);
 		}
 	}
 	

@@ -26,6 +26,8 @@ import net.sf.l2j.gameserver.instancemanager.SiegeManager;
 import net.sf.l2j.gameserver.model.L2TeleportLocation;
 import net.sf.l2j.gameserver.model.actor.L2Npc;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
+import net.sf.l2j.gameserver.model.entity.events.chaoticfarm.ChaoticFarmConfig;
+import net.sf.l2j.gameserver.model.entity.events.chaoticfarm.ChaoticFarmManager;
 import net.sf.l2j.gameserver.model.entity.events.tournaments.properties.ArenaTask;
 import net.sf.l2j.gameserver.model.zone.ZoneId;
 import net.sf.l2j.gameserver.network.SystemMessageId;
@@ -174,6 +176,19 @@ public final class L2TeleporterInstance extends L2NpcInstance
 				player.getParty().removePartyMember(player, MessageType.Left);
 		}
 		*/
+		else if (command.startsWith("chaoticfarmleave"))
+		{
+			ChaoticFarmManager.getInstance().requestLeave(player);
+		}
+		else if (command.startsWith("chaoticfarm"))
+		{
+			if (!ChaoticFarmConfig.CF_ENABLED)
+			{
+				player.sendMessage("Chaotic Farm nao esta disponivel no momento.");
+				return;
+			}
+			ChaoticFarmManager.getInstance().requestJoin(player);
+		}
 		else
 			super.onBypassFeedback(player, command);
 	}

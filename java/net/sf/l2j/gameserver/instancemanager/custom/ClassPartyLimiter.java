@@ -172,6 +172,7 @@ public class ClassPartyLimiter
 					case 110:
 						return true;
 				}
+				break;
 			case "titan":
 				switch (id)
 				{

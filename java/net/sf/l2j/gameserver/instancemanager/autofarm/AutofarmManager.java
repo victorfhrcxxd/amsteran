@@ -13,7 +13,7 @@ public enum AutofarmManager
 {
     INSTANCE;
     
-    private final Long iterationSpeedMs = 450L;
+    private final long iterationSpeedMs = 450L;
     
     private final ConcurrentHashMap<Integer, AutofarmPlayerRoutine> activeFarmers = new ConcurrentHashMap<>();
     private ScheduledFuture<?> onUpdateTask = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(onUpdate(), 1000, iterationSpeedMs);
@@ -77,7 +77,7 @@ public enum AutofarmManager
         startFarm(player);
     }
     
-    public Boolean isAutofarming(L2PcInstance player)
+    public boolean isAutofarming(L2PcInstance player)
     {
         return activeFarmers.containsKey(player.getObjectId());
     }
@@ -89,7 +89,10 @@ public enum AutofarmManager
 
     public void onDeath(L2PcInstance player) 
     {
-        if (isAutofarming(player)) 
+        if (isAutofarming(player))
+        {
             activeFarmers.remove(player.getObjectId());
+            player.stopSkillEffects(9501);
+        }
     }
 }

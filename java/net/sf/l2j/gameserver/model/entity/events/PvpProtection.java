@@ -14,10 +14,10 @@
  */
 package net.sf.l2j.gameserver.model.entity.events;
  
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
  
 
 import phantom.FakePlayer;
@@ -34,8 +34,8 @@ public class PvpProtection
  
 	protected PvpProtection()
 	{
-		killStats = new HashMap<>();
-		protections = new HashMap<>();
+		killStats = new ConcurrentHashMap<>();
+		protections = new ConcurrentHashMap<>();
 	}
  
 	public void checkKill(L2PcInstance killer, L2PcInstance victim)
@@ -84,7 +84,7 @@ public class PvpProtection
 			protections.get(victim).add(killer.getObjectId());
 		else
 		{
-			List<Integer> temp = new ArrayList<>();
+			List<Integer> temp = new CopyOnWriteArrayList<>();
 			temp.add(killer.getObjectId());
 			protections.put(victim.getObjectId(), temp);
 		}
@@ -102,8 +102,30 @@ public class PvpProtection
 		if (victim instanceof FakePlayer)
 			return false;
 		
-		if (!killer.isGM() && ((killer.getClan() != null && killer.getClan() == victim.getClan()) || (killer.getClan() != null && victim.getClan() != null && killer.getClan().getAllyName() != "" && killer.getClan().getAllyName() != null && killer.getClan().getAllyName().equals(victim.getClan().getAllyName())) || (killer.getClient().getConnection().getInetAddress().getHostAddress().equals(victim.getClient().getConnection().getInetAddress().getHostAddress())) || killer.getHWid().equals(victim.getHWid())))
-			return true;
+		if (!killer.isGM())
+		{
+			if (killer.getClan() != null && killer.getClan() == victim.getClan())
+				return true;
+
+			if (killer.getClan() != null && victim.getClan() != null)
+			{
+				String killerAlly = killer.getClan().getAllyName();
+				String victimAlly = victim.getClan().getAllyName();
+				if (killerAlly != null && !killerAlly.isEmpty() && killerAlly.equals(victimAlly))
+					return true;
+			}
+
+			if (killer.getClient() != null && !killer.getClient().isDetached() && killer.getClient().getConnection() != null && victim.getClient() != null && !victim.getClient().isDetached() && victim.getClient().getConnection() != null)
+			{
+				if (killer.getClient().getConnection().getInetAddress().getHostAddress().equals(victim.getClient().getConnection().getInetAddress().getHostAddress()))
+					return true;
+			}
+
+			String killerHwid = killer.getHWid();
+			String victimHwid = victim.getHWid();
+			if (killerHwid != null && killerHwid.equals(victimHwid))
+				return true;
+		}
  
 		if (protections.containsKey(victim.getObjectId()))
 			if (protections.get(victim.getObjectId()).contains(killer.getObjectId()))

@@ -577,6 +577,12 @@ public abstract class L2Character extends L2Object
 			return;
 		}
 
+		if (target.getInstanceId() != getInstanceId())
+		{
+			sendPacket(ActionFailed.STATIC_PACKET);
+			return;
+		}
+
 		if (!isAlikeDead())
 		{
 			if (this instanceof L2Npc && target.isAlikeDead() || !getKnownList().knowsObject(target))

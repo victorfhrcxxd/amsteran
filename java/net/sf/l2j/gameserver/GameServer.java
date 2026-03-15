@@ -143,6 +143,8 @@ import net.sf.l2j.gameserver.model.entity.events.TopKillerRoundSystem;
 import net.sf.l2j.gameserver.model.entity.events.toppvpevent.PvPEventManager;
 import net.sf.l2j.gameserver.model.entity.events.bonuzone.BonusZoneManager;
 import net.sf.l2j.gameserver.model.entity.events.bonuzone.BonusZoneReward;
+import net.sf.l2j.gameserver.model.entity.events.chaoticfarm.ChaoticFarmConfig;
+import net.sf.l2j.gameserver.model.entity.events.chaoticfarm.ChaoticFarmManager;
 import net.sf.l2j.gameserver.model.entity.events.capturetheflag.CTFConfig;
 import net.sf.l2j.gameserver.model.entity.events.capturetheflag.CTFManager;
 import net.sf.l2j.gameserver.model.entity.events.clanranking.ClanRankingConfig;
@@ -474,6 +476,9 @@ public class GameServer
 
 		if (Config.SOLO_BOSS_EVENT)
 			SoloBossEvent.getInstance().StartCalculationOfNextEventTime();
+
+		ChaoticFarmConfig.init();
+		ChaoticFarmManager.getInstance();
 		
 		Util.printSection("Fake Players");
 		FakePlayerConfig.init();

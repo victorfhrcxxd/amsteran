@@ -1,7 +1,10 @@
 package net.sf.l2j.gameserver.model.entity.events;
 
+import java.util.logging.Logger;
+
 import net.sf.l2j.Config;
 import net.sf.l2j.gameserver.ThreadPoolManager;
+import net.sf.l2j.gameserver.idfactory.IdFactory;
 import net.sf.l2j.gameserver.model.L2World;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
@@ -11,6 +14,7 @@ import net.sf.l2j.util.Rnd;
 
 public class Hide
 {
+	private static final Logger _log = Logger.getLogger(Hide.class.getName());
 	private static Hide _instance;
 	private final int delay = Config.HIDE_EVENT_ITEM_TIME * 60 * 1000;
 	
@@ -62,7 +66,7 @@ public class Hide
 		sm.addZoneName(getX(), getY(), getZ()); 
 		sm.addItemName(itemId);
 
-		item = new ItemInstance(Rnd.get(65535),itemId);
+		item = new ItemInstance(IdFactory.getInstance().getNextId(), itemId);
 		L2World.getInstance().storeObject(item);
 		item.setCount(itemCount);
 		item.setHide(true);
@@ -109,7 +113,7 @@ public class Hide
 	private Hide()
 	{
 		ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new Event(), delay, delay);
-		System.out.println("Automatic Hide event loaded with success.");
+		_log.info("Hide: Loaded.");
 	}
 
 	public static Hide getInstance()

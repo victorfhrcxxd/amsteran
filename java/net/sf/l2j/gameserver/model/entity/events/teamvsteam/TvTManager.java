@@ -150,11 +150,10 @@ public class TvTManager
 							confirm.addRequesterId(players.getObjectId());
 							players.sendPacket(confirm);
 						}
-						players = null;
 					}
-					catch (Throwable e)
+					catch (Exception e)
 					{
-						e.printStackTrace();
+						_log.warning("TvTEventEngine: Error sending dialog to player: " + e.getMessage());
 					}
 				}
 			}

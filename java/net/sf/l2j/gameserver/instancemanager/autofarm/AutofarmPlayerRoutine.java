@@ -86,7 +86,7 @@ public class AutofarmPlayerRoutine
 
 	private void attack() 
 	{
-		Boolean shortcutsContainAttack = shotcutsContainAttack(2);
+		boolean shortcutsContainAttack = shortcutsContainAttack();
 		
 		if (shortcutsContainAttack) 
 			physicalAttack();
@@ -198,11 +198,6 @@ public class AutofarmPlayerRoutine
 		return player.getCurrentMp() * 100.0f / player.getMaxMp();
 	}
 	
-	private Double percentageHpIsLessThan()
-	{
-		return player.getCurrentHp() * 100.0f / player.getMaxHp();
-	}
-	
 	private List<Integer> getAttackSpells()
 	{
 		return getSpellsInSlots(AutofarmConstants.attackSlots);
@@ -223,7 +218,7 @@ public class AutofarmPlayerRoutine
 		return getSpellsInSlots(AutofarmConstants.lowLifeSlots);
 	}
 
-	private boolean shotcutsContainAttack(int id) 
+	private boolean shortcutsContainAttack() 
 	{
 		return Arrays.stream(player.getAllShortCuts()).anyMatch(shortcut -> shortcut.getPage() == player.getPage() && shortcut.getType() == L2ShortCut.TYPE_ACTION && (shortcut.getId() == 2 || player.isSummonAttack() && shortcut.getId() == 22));
 	}
@@ -243,7 +238,7 @@ public class AutofarmPlayerRoutine
 	    return getMonsterTarget() != null && getMonsterTarget().isDead() && getMonsterTarget().getIsSpoiledBy() == player.getObjectId();
 	}
 	
-	private void castSpellWithAppropriateTarget(L2Skill skill, Boolean forceOnSelf)
+	private void castSpellWithAppropriateTarget(L2Skill skill, boolean forceOnSelf)
 	{
 		boolean isKtbBoss = player.getTarget() instanceof L2Character && ((L2Character) player.getTarget())._isKTBEvent;
 
@@ -384,10 +379,9 @@ public class AutofarmPlayerRoutine
 			}
 			// Other events (TvT, CTF, DM, LM): target enemy players
 			List<L2PcInstance> enemies = getEnemyPlayersInRadius(3000);
-			_log.info("AutofarmEvent: " + player.getName() + " in event, enemies found=" + enemies.size() + " region=" + (player.getWorldRegion() != null ? player.getWorldRegion().getName() : "null"));
 			if (!enemies.isEmpty())
 			{
-				L2PcInstance closestEnemy = enemies.stream().min((o1, o2) -> Integer.compare((int) Math.sqrt(player.getDistanceSq(o1)), (int) Math.sqrt(player.getDistanceSq(o2)))).get();
+				L2PcInstance closestEnemy = enemies.stream().min((o1, o2) -> Double.compare(player.getDistanceSq(o1), player.getDistanceSq(o2))).get();
 				committedTarget = closestEnemy;
 				player.setTarget(closestEnemy);
 				attack();
@@ -400,7 +394,7 @@ public class AutofarmPlayerRoutine
 		if (targets.isEmpty())
 			return;
 
-		L2MonsterInstance closestTarget = targets.stream().min((o1, o2) -> Integer.compare((int) Math.sqrt(player.getDistanceSq(o1)), (int) Math.sqrt(player.getDistanceSq(o2)))).get();
+		L2MonsterInstance closestTarget = targets.stream().min((o1, o2) -> Double.compare(player.getDistanceSq(o1), player.getDistanceSq(o2))).get();
 
 		committedTarget = closestTarget;
 		player.setTarget(closestTarget);
@@ -438,7 +432,7 @@ public class AutofarmPlayerRoutine
 		return (L2MonsterInstance)player.getTarget();
 	}
 
-	private void useMagicSkill(L2Skill skill, Boolean forceOnSelf)
+	private void useMagicSkill(L2Skill skill, boolean forceOnSelf)
 	{
 		if (skill.getSkillType() == L2SkillType.SIGNET)
 		{
@@ -509,7 +503,7 @@ public class AutofarmPlayerRoutine
 		
 	private void calculatePotions()
 	{
-		if (percentageHpIsLessThan() < player.getHpPotionPercentage())
+		if (getHpPercentage() < player.getHpPotionPercentage())
 			forceUseItem(1539); 
 		
 		if (percentageMpIsLessThan() < player.getMpPotionPercentage())

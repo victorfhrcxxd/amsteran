@@ -5,6 +5,7 @@ import java.util.StringTokenizer;
 import net.sf.l2j.gameserver.handler.IVoicedCommandHandler;
 import net.sf.l2j.gameserver.instancemanager.autofarm.AutofarmManager;
 import net.sf.l2j.gameserver.model.L2Object;
+import net.sf.l2j.gameserver.model.entity.events.chaoticfarm.ChaoticFarmManager;
 import net.sf.l2j.gameserver.model.actor.instance.L2MonsterInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
@@ -169,6 +170,12 @@ public class VoicedAutoFarm implements IVoicedCommandHandler
 	    	}
 	    	else
 	    	{
+	    		if (ChaoticFarmManager.getInstance().isInRoom(activeChar))
+	    		{
+	    			activeChar.sendMessage("AutoFarm nao pode ser ativado dentro de uma sala do Chaotic Farm.");
+	    			showAutoFarm(activeChar);
+	    			return false;
+	    		}
 	    		AutofarmManager.INSTANCE.startFarm(activeChar);
 				activeChar.setAutoFarm(true);
 	    	}

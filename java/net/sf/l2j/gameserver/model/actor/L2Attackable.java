@@ -48,6 +48,7 @@ import net.sf.l2j.gameserver.model.actor.status.AttackableStatus;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.model.entity.events.bonuzone.BonusZone;
 import net.sf.l2j.gameserver.model.entity.events.bonuzone.BonusZoneReward;
+import net.sf.l2j.gameserver.model.entity.events.chaoticfarm.ChaoticFarmManager;
 import net.sf.l2j.gameserver.model.entity.events.clanranking.ClanRankingConfig;
 import net.sf.l2j.gameserver.model.entity.events.demonzone.DemonZone;
 import net.sf.l2j.gameserver.model.entity.events.demonzone.DemonZoneReward;
@@ -466,13 +467,9 @@ public class L2Attackable extends L2Npc
 			return false;
 
 		// Notify the Quest Engine of the L2Attackable death if necessary
+		L2PcInstance player = (killer != null) ? killer.getActingPlayer() : null;
 		try
 		{
-			L2PcInstance player = null;
-			
-			if (killer != null)
-				player = killer.getActingPlayer();
-			
 			if (player != null)
 			{
 				List<Quest> quests = getTemplate().getEventQuests(QuestEventType.ON_KILL);
@@ -485,6 +482,8 @@ public class L2Attackable extends L2Npc
 		{
 			_log.log(Level.SEVERE, "", e);
 		}
+		
+		ChaoticFarmManager.getInstance().onMobDeath(getNpcId(), getObjectId(), player);
 		
 		return true;
 	}

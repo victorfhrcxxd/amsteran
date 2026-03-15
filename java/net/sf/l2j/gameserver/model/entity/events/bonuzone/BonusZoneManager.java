@@ -52,8 +52,8 @@ public class BonusZoneManager implements Runnable
 		if (_state == EngineState.AWAITING)
 		{
 			Calendar calendar = Calendar.getInstance();
-			int hour = calendar.get(11);
-			int minute = calendar.get(12);
+			int hour = calendar.get(Calendar.HOUR_OF_DAY);
+			int minute = calendar.get(Calendar.MINUTE);
 			for (String time : Config.BONUS_ZONE_INTERVAL)
 			{
 				String[] splitTime = time.split(":");
@@ -127,7 +127,7 @@ public class BonusZoneManager implements Runnable
 			SpawnEventChampions();
 			
 			_state = EngineState.ACTIVE;
-			_tick = Config.DEMON_ZONE_RUNNING_TIME * 60;
+			_tick = Config.BONUS_ZONE_RUNNING_TIME * 60;
 		} 
 	}
 

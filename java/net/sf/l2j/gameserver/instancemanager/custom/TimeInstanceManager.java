@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import net.sf.l2j.Config;
@@ -30,7 +31,7 @@ public class TimeInstanceManager
 	{
 		if (Config.TIME_INSTANCE_ENABLED)
 		{
-			SheduleTimeInstanceTask(true);
+			scheduleTimeInstanceTask();
 			
 			_log.info("TimeInstanceManager: Loaded.");
 		}
@@ -247,25 +248,10 @@ public class TimeInstanceManager
 		}
 	}
 	
-	public static void waitSecs(int i)
+	public void scheduleTimeInstanceTask()
 	{
-		try
-		{
-			Thread.sleep(i * 1000);
-		}
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		}
-	}
-	
-	public void SheduleTimeInstanceTask(boolean init)
-	{
-		if (!init)
-			waitSecs(60);
-		
 		_task = new TimeInstanceTask();
-		ThreadPoolManager.getInstance().executeTask(_task);
+		ThreadPoolManager.getInstance().scheduleGeneral(_task, TimeUnit.SECONDS.toMillis(60));
 	}
 	
 	class TimeInstanceTask implements Runnable
@@ -296,7 +282,7 @@ public class TimeInstanceManager
 				}
 			}
 			
-			SheduleTimeInstanceTask(false);
+			scheduleTimeInstanceTask();
 		}
 	}
 	

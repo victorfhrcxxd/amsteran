@@ -148,6 +148,7 @@ import net.sf.l2j.gameserver.model.entity.events.RankedSystem;
 import net.sf.l2j.gameserver.model.entity.events.capturetheflag.CTFEvent;
 import net.sf.l2j.gameserver.model.entity.events.deathmatch.DMEvent;
 import net.sf.l2j.gameserver.model.entity.events.fortress.FOSEvent;
+import net.sf.l2j.gameserver.model.entity.events.chaoticfarm.ChaoticFarmManager;
 import net.sf.l2j.gameserver.model.entity.events.killtheboss.KTBEvent;
 import net.sf.l2j.gameserver.model.entity.events.lastman.LMEvent;
 import net.sf.l2j.gameserver.model.entity.events.multiteamvsteam.MultiTvTEvent;
@@ -523,6 +524,7 @@ public class L2PcInstance extends L2Playable
 
 	private boolean _noble = false;
 	private boolean _hero = false;
+	private boolean _visualRefreshOnTeleport = false;
 
 	private int heroConsecutiveKillCount = 0;
 	private boolean isPVPHero = false;
@@ -4589,6 +4591,7 @@ public class L2PcInstance extends L2Playable
 			}
 			
 			KTBEvent.onDie(this);
+			ChaoticFarmManager.getInstance().onPlayerDeath(this);
 			
 			// Clear resurrect xp calculation
 			setExpBeforeDeath(0);
@@ -4844,6 +4847,9 @@ public class L2PcInstance extends L2Playable
 		if (isInDuel() && targetPlayer.isInDuel())
 			return;
 
+		if (ChaoticFarmManager.getInstance().isInRoom(this) && ChaoticFarmManager.getInstance().isInRoom(targetPlayer))
+			return;
+
 		if (Config.SHOW_HP_PVP)
 		{
 			targetPlayer.sendPacket(new ExShowScreenMessage("You Killed By " + getName() + " Left [HP - " + getCurrentShowHpPvp() + "] [CP - " + getCurrentShowCpPvp() + "]", 4000));
@@ -4903,67 +4909,6 @@ public class L2PcInstance extends L2Playable
 				sendPacket(new UserInfo(this));
 			}
 			return;
-		}
-
-		// Check if it's pvp (cases : regular, wars, victim is PKer)
-		if (checkIfPvP(target) || (targetPlayer.getClan() != null && getClan() != null && getClan().isAtWarWith(targetPlayer.getClanId()) && targetPlayer.getClan().isAtWarWith(getClanId()) && targetPlayer.getPledgeType() != L2Clan.SUBUNIT_ACADEMY && getPledgeType() != L2Clan.SUBUNIT_ACADEMY) || (targetPlayer.getKarma() > 0 && Config.KARMA_AWARD_PK_KILL) || MultiTvTEvent.isStarted() && MultiTvTEvent.isPlayerParticipant(getObjectId()) || TvTEvent.isStarted() && TvTEvent.isPlayerParticipant(getObjectId()) || CTFEvent.isStarted() && CTFEvent.isPlayerParticipant(getObjectId()) || FOSEvent.isStarted() && FOSEvent.isPlayerParticipant(getObjectId()) || DMEvent.isStarted() && DMEvent.isPlayerParticipant(getObjectId()))
-		{
-			if (target instanceof L2PcInstance)
-			{
-				// Add PvP point to attacker.
-				increasePvpKills();
-
-				if (Config.ANNOUNCE_PK_PVP)
-				{
-					if (!isGM())
-					{
-						String msg = "";
-						msg = Config.ANNOUNCE_PVP_MSG.replace("$killer", getName()).replace("$target", targetPlayer.getName());
-						if (Config.ANNOUNCE_PK_PVP_NORMAL_MESSAGE)
-							Broadcast.toAllOnlinePlayersPvpAnnounce(SystemMessage.getSystemMessage(SystemMessageId.S1_S2).addZoneName(getX(), getY(), getZ()).addString(msg));
-						else
-							Broadcast.announceToPlayersPvpAnnounce(msg);
-					}
-				}
-
-				// Kill Streak
-				if (targetPlayer.isKillStreak())
-					Broadcast.QuakeAnnounce(getName()+ " shutdown " + targetPlayer.getName() + " kill streak ::");
-
-				// Pvp Reward
-				if (Config.ALLOW_PVP_REWARD)
-					pvpReward();
-
-				// Quake System
-				if (Config.ALLOW_QUAKE_SYSTEM)
-					QuakeSystem();
-
-				// Quake System
-				if (Config.ALLOW_QUAKE_SOUND)
-					QuakeSoundSystem();
-
-				// Increase the kill count for a special hero aura
-				heroConsecutiveKillCount++;
-
-				// If heroConsecutiveKillCount == 30 give hero aura
-				if (heroConsecutiveKillCount == Config.KILLS_TO_GET_WAR_LEGEND_AURA && Config.WAR_LEGEND_AURA)
-				{
-					setHeroAura(true);
-					Broadcast.QuakeAnnounce(getName() + " becames War Legend with " + Config.KILLS_TO_GET_WAR_LEGEND_AURA + " PvP's!! ::");
-				}
-
-				if (Config.ALLOW_RANKED_SYSTEM)
-				{
-					RankedSystem.PvpRank(this, target);
-					RankedSystem.RankReward(this);
-				}
-
-				//ColorSystem pvpcolor = new ColorSystem();
-				//pvpcolor.updateNameColor(this);
-
-				// Send UserInfo packet to attacker with its Karma and PK Counter
-				sendPacket(new UserInfo(this));
-			}
 		}
 
 		// Otherwise, killer is considered as a PKer.
@@ -7688,6 +7633,9 @@ public class L2PcInstance extends L2Playable
 			if (getDuelState() == Duel.DUELSTATE_DUELLING && getDuelId() == cha.getDuelId())
 				return true;
 
+			if (ChaoticFarmManager.getInstance().isInRoom(this) && ChaoticFarmManager.getInstance().isInRoom(attacker.getActingPlayer()))
+				return true;
+			
 			if (getClan() != null)
 			{
 				final Siege siege = SiegeManager.getSiege(getX(), getY(), getZ());
@@ -8371,6 +8319,9 @@ public class L2PcInstance extends L2Playable
 			return true;
 
 		if (MultiTvTEvent.isStarted() && MultiTvTEvent.isPlayerParticipant(getObjectId()) || TvTEvent.isStarted() && TvTEvent.isPlayerParticipant(getObjectId()) || CTFEvent.isStarted() && CTFEvent.isPlayerParticipant(getObjectId()) || FOSEvent.isStarted() && FOSEvent.isPlayerParticipant(getObjectId()) || DMEvent.isStarted() && DMEvent.isPlayerParticipant(getObjectId()))
+			return true;
+		
+		if (ChaoticFarmManager.getInstance().isInRoom(this) && target instanceof L2Playable && ChaoticFarmManager.getInstance().isInRoom(target.getActingPlayer()))
 			return true;
 		
 		if (skill.isDebuff() || skill.isOffensive())
@@ -9329,6 +9280,16 @@ public class L2PcInstance extends L2Playable
 		return _noble;
 	}
 
+	public boolean isVisualRefreshOnTeleport()
+	{
+		return _visualRefreshOnTeleport;
+	}
+
+	public void setVisualRefreshOnTeleport(boolean value)
+	{
+		_visualRefreshOnTeleport = value;
+	}
+
 	/**
 	 * Set Noblesse Status, and reward with nobles' skills.
 	 * @param val Add skills if setted to true, else remove skills.
@@ -10163,6 +10124,10 @@ public class L2PcInstance extends L2Playable
 		TvTEvent.onTeleported(this);
 		MultiTvTEvent.onTeleported(this);
 		KTBEvent.onTeleported(this);
+		ChaoticFarmManager.getInstance().onPlayerTeleportOut(this);
+
+		if (_visualRefreshOnTeleport)
+			getKnownList().refreshInfos();
 	}
 
 	public void setLastServerPosition(int x, int y, int z)
@@ -10491,6 +10456,7 @@ public class L2PcInstance extends L2Playable
 			TvTEvent.onLogout(this);
 			MultiTvTEvent.onLogout(this);
 			KTBEvent.onLogout(this);
+			ChaoticFarmManager.getInstance().onPlayerDisconnect(this);
 
 			// Update inventory and remove them from the world
 			getInventory().deleteMe();

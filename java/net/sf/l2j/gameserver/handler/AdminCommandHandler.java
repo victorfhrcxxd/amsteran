@@ -26,6 +26,7 @@ import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminBanHwid;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminBookmark;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminBuffs;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminCTFEvent;
+import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminChaoticFarm;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminCache;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminCamera;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminChangeAccessLevel;
@@ -118,6 +119,7 @@ public class AdminCommandHandler
 		registerAdminCommandHandler(new AdminCursedWeapons());
 		registerAdminCommandHandler(new AdminChatManager());
 		registerAdminCommandHandler(new AdminCTFEvent());
+		registerAdminCommandHandler(new AdminChaoticFarm());
 		registerAdminCommandHandler(new AdminDelete());
 		registerAdminCommandHandler(new AdminDoorControl());
 		registerAdminCommandHandler(new AdminDMEvent());

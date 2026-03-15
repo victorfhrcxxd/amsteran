@@ -26,37 +26,25 @@ public class RankedSystem
 		{
 			int Ncscore = Rnd.get(1, 5);
 			
-			if (player != null && target != null && target instanceof L2PcInstance)
+			if (player.isInsideZone(ZoneId.ZONE_PVP) || player.isInsideZone(ZoneId.FLAG_AREA) || player.isInsideZone(ZoneId.HEAVY_FARM_AREA) || player.isInsideZone(ZoneId.NO_ZERG) || player.isInsideZone(ZoneId.CHANGE_PVP) || player.isInsideZone(ZoneId.BOSS_AREA) || player.isInsideZone(ZoneId.SIEGE) || player.isInsideZone(ZoneId.PVP))
 			{
-				if (PvpProtection.getInstance().protectionExists(player, ((L2PcInstance)target)))
-					return;
-
-				if (player.isInsideZone(ZoneId.ZONE_PVP) || player.isInsideZone(ZoneId.FLAG_AREA) || player.isInsideZone(ZoneId.HEAVY_FARM_AREA) || player.isInsideZone(ZoneId.NO_ZERG) || player.isInsideZone(ZoneId.CHANGE_PVP) || player.isInsideZone(ZoneId.BOSS_AREA) || player.isInsideZone(ZoneId.SIEGE) || player.isInsideZone(ZoneId.PVP))
-				{
-					player.addPcBangScore(Ncscore);
-					player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.ACQUIRED_S1_PCPOINT).addNumber(Ncscore));
-					player.updatePcBangWnd(Ncscore, true, false);
-				}
+				player.addPcBangScore(Ncscore);
+				player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.ACQUIRED_S1_PCPOINT).addNumber(Ncscore));
+				player.updatePcBangWnd(Ncscore, true, false);
 			}
 		}
 		else
 		{
 			int score = Rnd.get(15, 20);
 
-			if (player != null && target != null && target instanceof L2PcInstance)
+			if (player.isInsideZone(ZoneId.ZONE_PVP) || player.isInsideZone(ZoneId.FLAG_AREA) || player.isInsideZone(ZoneId.HEAVY_FARM_AREA) || player.isInsideZone(ZoneId.NO_ZERG) || player.isInsideZone(ZoneId.CHANGE_PVP) || player.isInsideZone(ZoneId.BOSS_AREA) || player.isInsideZone(ZoneId.SIEGE) || player.isInsideZone(ZoneId.PVP))
 			{
-				if (PvpProtection.getInstance().protectionExists(player, ((L2PcInstance)target)))
-					return;
+				player.addPcBangScore(score);
+				player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.ACQUIRED_S1_PCPOINT).addNumber(score));
+				player.updatePcBangWnd(score, true, false);
 
-				if (player.isInsideZone(ZoneId.ZONE_PVP) || player.isInsideZone(ZoneId.FLAG_AREA) || player.isInsideZone(ZoneId.HEAVY_FARM_AREA) || player.isInsideZone(ZoneId.NO_ZERG) || player.isInsideZone(ZoneId.CHANGE_PVP) || player.isInsideZone(ZoneId.BOSS_AREA) || player.isInsideZone(ZoneId.SIEGE) || player.isInsideZone(ZoneId.PVP))
-				{
-					player.addPcBangScore(score);
-					player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.ACQUIRED_S1_PCPOINT).addNumber(score));
-					player.updatePcBangWnd(score, true, false);
-
-					((L2PcInstance)target).reducePcBangScore(score);
-					target.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.USING_S1_PCPOINT).addNumber(score));
-				}
+				((L2PcInstance)target).reducePcBangScore(score);
+				target.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.USING_S1_PCPOINT).addNumber(score));
 			}
 		}
 	}

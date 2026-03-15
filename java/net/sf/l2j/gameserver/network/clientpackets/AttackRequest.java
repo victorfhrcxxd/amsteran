@@ -69,6 +69,12 @@ public final class AttackRequest extends L2GameClientPacket
 			return;
 		}
 		
+		if (target.getInstanceId() != activeChar.getInstanceId())
+		{
+			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
+			return;
+		}
+		
 		// Only GMs can directly attack invisible characters
 		if (target instanceof L2PcInstance) 
 		{

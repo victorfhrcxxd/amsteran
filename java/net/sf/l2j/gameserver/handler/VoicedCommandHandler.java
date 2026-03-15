@@ -38,6 +38,7 @@ import net.sf.l2j.gameserver.handler.voicedcommandhandlers.VoicedVipManager;
 import net.sf.l2j.gameserver.handler.voicedcommandhandlers.VoicedDressMe;
 import net.sf.l2j.gameserver.handler.voicedcommandhandlers.VoicedJoinPvpEvent;
 import net.sf.l2j.gameserver.handler.voicedcommandhandlers.VoicedOfflineFarm;
+import net.sf.l2j.gameserver.handler.voicedcommandhandlers.VoicedVisualRefresh;
 import net.sf.l2j.gameserver.handler.voicedcommandhandlers.VoicedZerg;
 
 public class VoicedCommandHandler
@@ -89,6 +90,7 @@ public class VoicedCommandHandler
 		}
 		
 		 registerHandler(new VoicedZerg());
+		 registerHandler(new VoicedVisualRefresh());
 		 
 		if (Config.ALLOW_DRESS_ME_SYSTEM)
 			registerHandler(new VoicedDressMe());

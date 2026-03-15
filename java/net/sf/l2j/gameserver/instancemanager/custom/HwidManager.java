@@ -43,7 +43,7 @@ public class HwidManager
 			String hwid = activeChar.getHWid();
 			String playerHwid = player.getHWid();
 
-			if (hwid.equals(playerHwid))
+			if (hwid != null && hwid.equals(playerHwid))
 			{
 				if (hwidMap.get(hwid) == null)
 					hwidMap.put(hwid, new ArrayList<L2PcInstance>());

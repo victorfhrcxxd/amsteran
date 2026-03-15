@@ -83,7 +83,7 @@ public class TvTEventTeleporter implements Runnable
 		if (_playerInstance instanceof FakePlayer && !TvTEvent.isStarted())
 			_playerInstance.teleToLocation(-114584,-251256,-2992, 0);
 		else
-			_playerInstance.teleToLocation(_coordinates[0] + Rnd.get(-550), _coordinates[1] + Rnd.get(550), _coordinates[2], 0);
+			_playerInstance.teleToLocation((_coordinates[0] + Rnd.get(1101)) - 550, (_coordinates[1] + Rnd.get(1101)) - 550, _coordinates[2], 0);
 
 		if (TvTEvent.isStarted() && !_adminRemove)
 		{
